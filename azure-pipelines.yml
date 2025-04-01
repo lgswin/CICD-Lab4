@@ -54,7 +54,7 @@ stages:
 
     - task: AzureFunctionApp@1
       inputs:
-        azureSubscription: '$(azureSubscription)'     # <-- Replace with your Azure service connection
+        azureSubscription: 'lab4_connection'     # <-- Replace with your Azure service connection
         appType: 'functionAppLinux'                   # or functionApp depending on OS
-        appName: 'HelloFunction'                 # <-- Replace with your Azure Function App name
+        appName: 'HttpTrigger'                 # <-- Replace with your Azure Function App name
         package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
