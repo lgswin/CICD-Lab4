@@ -69,6 +69,6 @@ stages:
     steps:
     - task: AzureFunctionApp@1
       inputs:
-        azureSubscription: 'Azure subscription 1'
+        azureSubscription: 'lab4_connection'
         appName: $(functionAppName)
         package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
