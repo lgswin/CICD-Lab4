@@ -1,0 +1,12 @@
+{
+  "name": "azure-function-app",
+  "version": "1.0.0",
+  "description": "Simple Azure Function App with HTTP trigger",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^3.5.1"
+  }
+} 
