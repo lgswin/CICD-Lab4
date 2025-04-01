@@ -64,15 +64,11 @@ stages:
   dependsOn: Build
   condition: succeededOrFailed()
   jobs:
-  - deployment: Deploy
+  - job: Deploy
     displayName: Deploy
-    environment: 'production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureFunctionApp@1
-            inputs:
-              azureSubscription: 'Azure subscription 1'
-              appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+    steps:
+    - task: AzureFunctionApp@1
+      inputs:
+        azureSubscription: 'Azure subscription 1'
+        appName: $(functionAppName)
+        package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
