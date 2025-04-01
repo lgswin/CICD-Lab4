@@ -1,0 +1,60 @@
+trigger:
+- main
+
+stages:
+# 1️⃣ Build Stage
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: Build
+    displayName: 'Install dependencies'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'  # Azure Functions supports Node 18
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+      displayName: 'Install project dependencies'
+
+# 2️⃣ Test Stage (optional - include only if you have tests)
+- stage: Test
+  displayName: 'Test Stage'
+  condition: succeeded()
+  jobs:
+  - job: Test
+    displayName: 'Run Unit Tests'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        npm test
+      displayName: 'Run tests with npm'
+
+# 3️⃣ Deploy Stage
+- stage: Deploy
+  displayName: 'Deploy to Azure'
+  condition: succeeded()
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy Function App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
+        replaceExistingArchive: true
+
+    - task: AzureFunctionApp@1
+      inputs:
+        azureSubscription: '$(azureSubscription)'     # <-- Replace with your Azure service connection
+        appType: 'functionAppLinux'                   # or functionApp depending on OS
+        appName: 'HelloFunction'                 # <-- Replace with your Azure Function App name
+        package: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
